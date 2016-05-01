@@ -1,6 +1,6 @@
 # shoplift
 
 Usage: 
-1. npm install
-2. node server
-3. localhost:3000 in your browser. 
+1. node server
+2. localhost:3000 in your browser. 
+3. consult your console.log in the terminal.
