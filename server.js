@@ -1,25 +1,14 @@
-const http = require('http');
-const request = require('superagent');
+const express = require('express');
+const app = express();
+const PORT = 3000;
+// const crimeRouter = require(__dirname + '/routes/crime_router');
+const mongoose = require('mongoose');
+const Crime = require(__dirname + '/models/crime');
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/crimes_db');
 
+// mongoose.connect('mongodb://localhost/crimes_db');
 
-const server = http.createServer((req, res) => {
-  // res.writeHead(200, { 'Content-Type': 'application/json' } );
-  res.writeHead(200, { 'Content-Type': 'text/html' } );
+const crimeRouter = require(__dirname + '/routes/crime_router');
 
-  request.get('https://data.seattle.gov/api/views/xv6f-9u5j/rows.json?accessType=DOWNLOAD')
-.end((err, res) => {
-  if (err) { console.log(err);
-  }
-
-  for (var i = 0; i < res.body.data.length; i++) {
-    console.log(res.body.data[i][20]);
-  }
-
-  // console.log(res.body.data[0]);
-});
-  res.end();
-
-});
-
-
-server.listen(3000, () => process.stdout.write('server up on 3000'));
+app.use('/api', crimeRouter);
+app.listen(PORT, () => console.log('server up on ' + PORT));
