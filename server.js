@@ -1,50 +1,25 @@
 const http = require('http');
+const request = require('superagent');
 
-
-// Note: use this url for data on assault with guns: https:// data.seattle.gov/Public-Safety/Assault-Gun/xv6f-9u5j
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' } );
+  // res.writeHead(200, { 'Content-Type': 'application/json' } );
+  res.writeHead(200, { 'Content-Type': 'text/html' } );
 
-  function getJson(cb) {
-    console.log('something');
-    return http.get({
-      host:'data.seattle.gov',
-      path:'/api/views/jvdx-443h/rows.json?accessType=DOWNLOAD'
-    }, function(response) {
-
-      var arr = [];
-      var obj = {};
-      var body = '';
-      response.on('data', function(d) {
-        var str = d.toString();
-        body += d;
-      });
-
-      response.on('end', function() {
-        var parsed = JSON.parse(body);
-        var h = parsed.data;
-
-        for (var i = 0; i < parsed.data.length; i++) {
-          obj[h[i][12]] = h[i][15];
-          arr.push(obj);
-        //   var k = parsed.data[i][15];
-        //   res.write(k.toString());
-
-          console.log(obj);
-        }
-        res.write('placeholder text');
-        // res.write(h.toString());
-        console.log(parsed.data.length);
-      });
-      cb = function() {};
-    //   res.end();
-    });
-    res.end();
+  request.get('https://data.seattle.gov/api/views/xv6f-9u5j/rows.json?accessType=DOWNLOAD')
+.end((err, res) => {
+  if (err) { console.log(err);
   }
 
-  getJson();
+  for (var i = 0; i < res.body.data.length; i++) {
+    console.log(res.body.data[i][20]);
+  }
 
+  // console.log(res.body.data[0]);
+});
+  res.end();
 
 });
+
+
 server.listen(3000, () => process.stdout.write('server up on 3000'));
